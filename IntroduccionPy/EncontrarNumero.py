@@ -1,5 +1,4 @@
 import random
-#creamos la lista con numeros aleatorios del 1 al 50 como en el ej anterior
 lista=[]
 for i in range(1,11):
     num=random.randint(1,50)
