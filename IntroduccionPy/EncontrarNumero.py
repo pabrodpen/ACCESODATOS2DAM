@@ -7,6 +7,8 @@ for i in range(1,11):
 buscado=int(input("Dime un numero a buscar:"))
 
 #si el numero esta en la lista imprimimos Bingo
+#para ellos usamos un booleano que sirve como flag en el caso de que encontremos
+#el numero
 encontrado=False
 while not encontrado:
     
