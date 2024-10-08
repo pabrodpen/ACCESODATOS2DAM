@@ -1,28 +1,22 @@
-import sqlite3
+import pymysql
 
-import mysql.connector
 # Conexión a la base de datos MySQL
-conexion = mysql.connector.connect(
-host="localhost", # Cambia esto si tu base de datos está en otro servidor
-user="usuario", # Tu usuario de MySQL
-password="usuario", # Tu contraseña de MySQL
-database="1dam" # Asegúrate de que la base de datos exista
+conexion = pymysql.connect(
+    host="localhost",
+    user="usuario",     
+    password="usuario",  
+    database="1dam"    
 )
-cursor = conexion.cursor()
-
-# Conexión a la base de datos SQLite (si no existe, se crea)
-conexion = sqlite3.connect('datos.db')
 
 # Crear el cursor
 cursor = conexion.cursor()
 
-
 # Insertar datos en la tabla
 cursor.execute("""
-INSERT INTO alumnos (nombre, edad) VALUES
-    ('Juan', 20),
-    ('Ana', 18)
-""")
+INSERT INTO Plantas (nombre, familia, tamaño, clima, tipo_suelo) VALUES
+('Tulipán', 'Liliaceae', 'Mediana', 'Templado', 'Franco'),
+('Ficus', 'Moraceae', 'Grande', 'Tropical', 'Arcilloso');
+
 
 # Confirmar los cambios
 conexion.commit()
