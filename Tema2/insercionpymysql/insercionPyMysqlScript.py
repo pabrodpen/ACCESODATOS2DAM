@@ -27,7 +27,7 @@ try:
 
     cursor = conexion.cursor()
 
-    for i in range(10000):
+    for i in range(10000,20000):
         nombreV = f"Planta {i + 1}"
         familiaV = random.choice(familia)
         tamañoV = random.choice(tamaño)
