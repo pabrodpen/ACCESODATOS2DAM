@@ -25,7 +25,7 @@ try:
 
 
   
-    cursor.execute("UPDATE Plantas SET clima = %s WHERE nombre = %s", ('Mediterráneo', 'Aloe Vera'))
+    cursor.execute("UPDATE Plantas SET clima = %s WHERE nombre = %s", ('Mediterráneo', 'Cactus'))
     conexion.commit()
     print(cursor.rowcount, "registro(s) actualizado(s)")
 

@@ -25,9 +25,28 @@ try:
 
 
   
-    cursor.execute("DELETE FROM Plantas WHERE nombre = %s", ('Rosa'))
-    conexion.commit()
-    print(cursor.rowcount, "registro(s) eliminado(s)")
+    cursor.execute("SELECT * FROM Plantas")
+
+    print("Registros uno a uno")
+
+    fila=cursor.fetchone()
+    while fila:
+        print(fila)
+        fila=cursor.fetchone() #siguiente fila
+        
+
+    
+    #de nuevo
+    cursor.execute("SELECT * FROM Plantas")
+
+    print("Registros uno a uno")
+
+    fila=cursor.fetchone()
+    while fila:
+        print(fila)
+        fila=cursor.fetchone() #siguiente fila
+
+    
 
 
 
@@ -43,4 +62,4 @@ finally:
         print("Conexión cerrada")
 
 end_time = time.time()
-print(f"Tiempo de eliminacion con PyMySQL: {end_time - start_time} segundos")
+print(f"Consulta con PyMySQL: {end_time - start_time} segundos")
