@@ -28,9 +28,37 @@ class Plantas(Model):
 
 
 print("Tarea1...")
-# Buscar todas las herramientas de tipo 'Manual'
+# Buscar todas las Plantas de clima 'Templado'
+print("Plantas de clima templado")
 plantas_climas_templados = Plantas.select().where(Plantas.clima == "Templado")
 for planta in plantas_climas_templados:
+    print(
+        f"Nombre: {planta.nombre}, Familia: {planta.familia}, Tamaño: {planta.tamaño}, Clima: {planta.clima}, Tipo de suelo: {planta.tipo_suelo}"
+    )
+
+print("Tarea2 ...")
+# Eliminamos una planta cuyo tamaño sea Mediano y cuyo clima sea Templado(operador &)
+Plantas.delete().where(
+    (Plantas.tamaño == "Mediano") & (Plantas.clima == "Templado")
+).execute()
+print("Planta con tamaño Mediano y clima Templado eliminada.")
+
+# mostramos los registros restantes
+# Mostrar los registros restantes después de la eliminación
+print("REGISTROS DESPUÉS DE LA ELIMINACIÓN:")
+for planta in Plantas.select():
+    print(
+        f"Nombre: {planta.nombre}, Familia: {planta.familia}, Tamaño: {planta.tamaño}, Clima: {planta.clima}, Tipo de suelo: {planta.tipo_suelo}"
+    )
+
+print("Tarea3 ...")
+
+# Eliminamos una serie de registros
+Plantas.delete().where(Plantas.tipo_suelo == "Arenoso").execute()
+print("Plantas de tipo Arenoso eliminadas")
+# Mostrar los registros restantes después de la eliminación
+print("REGISTROS DESPUÉS DE LA ELIMINACIÓN:")
+for planta in Plantas.select():
     print(
         f"Nombre: {planta.nombre}, Familia: {planta.familia}, Tamaño: {planta.tamaño}, Clima: {planta.clima}, Tipo de suelo: {planta.tipo_suelo}"
     )
