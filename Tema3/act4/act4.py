@@ -66,7 +66,6 @@ try:
                 f"Nombre: {planta.nombre}, Familia: {planta.familia}, Tamaño: {planta.tamaño}, Clima: {planta.clima}, Tipo de suelo: {planta.tipo_suelo}"
             )
 
-    
 
 except IntegrityError as e:
     print(f"Error al insertar o manipular datos en la base de datos: {e}")

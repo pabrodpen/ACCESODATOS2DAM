@@ -81,7 +81,7 @@ try:
         )
         # Este registro fallará porque 'nombre' es None
         Plantas.create(
-            nombre=None,
+            nombre="Hortensia",
             familia="Hydrangeaceae",
             tamaño="Mediano",
             clima="Templado",
@@ -92,7 +92,9 @@ except IntegrityError as e:
     print(f"Error al insertar plantas: {e}")
 
 # select para ver que se han deshecho los cambios
-print("REGISTROS")
+print(
+    "REGISTROS"
+)  # si da error no mostrará ningún registro, ya que no se habrá insertado nada
 for planta in Plantas.select():
     print(
         f"Nombre: {planta.nombre}, Familia: {planta.familia}, Tamaño: {planta.tamaño}, Clima: {planta.clima}, Tipo de suelo: {planta.tipo_suelo}"

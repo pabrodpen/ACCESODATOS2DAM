@@ -1,6 +1,7 @@
 from peewee import MySQLDatabase, Model, CharField
 
 
+# Definir la función para verificar si una tabla existe en la base de datos
 def tabla_existe(nombre_tabla):
     consulta = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = %s AND table_name = %s"
     cursor = db.execute_sql(consulta, ("1dam", nombre_tabla))
@@ -34,14 +35,18 @@ class Plantas(Model):
         database = db  # Base de datos
         table_name = "Plantas"  # Nombre de la tabla en la base de datos
 
-    # Eliminamos la tabla si ya existe para empezar a trabajar desde cero
-    if tabla_existe(db._meta.Plantas):
-        print(f"La tabla '{db._meta.Plantas}' existe.")
-        db.drop_tables([db], cascade=True)
-        print(f"Tabla '{db._meta.Plantas}' eliminada con éxito.")
-    else:
-        print(f"La tabla '{db._meta.Plantas}' no existe.")
 
+# Verificar si la tabla existe y eliminarla si es necesario
+if tabla_existe("Plantas"):
+    print("La tabla 'Plantas' existe.")
+    db.drop_tables([Plantas], cascade=True)
+    print("Tabla 'Plantas' eliminada con éxito.")
+else:
+    print("La tabla 'Plantas' no existe.")
+
+# Crear la tabla de nuevo
+db.create_tables([Plantas])
+print("Tabla 'Plantas' creada con éxito.")
 
 # Insertar varias plantas
 Plantas.create(
