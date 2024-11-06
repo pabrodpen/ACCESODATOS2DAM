@@ -1,0 +1,1 @@
+coger un csv, pasarlo a una bd, hacer unas operaciones con ella, pasarlo a un json y mostrarlo(enviar varios datos a txt)
