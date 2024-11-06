@@ -1,0 +1,37 @@
+[
+    {
+        "ID": "1",
+        "Nombre": "Ana García",
+        "Edad": "28",
+        "Departamento": "Marketing",
+        "Salario": "32000"
+    },
+    {
+        "ID": "2",
+        "Nombre": "Carlos Pérez",
+        "Edad": "35",
+        "Departamento": "Ventas",
+        "Salario": "45000"
+    },
+    {
+        "ID": "3",
+        "Nombre": "Lucía Rodríguez",
+        "Edad": "30",
+        "Departamento": "Desarrollo",
+        "Salario": "50000"
+    },
+    {
+        "ID": "4",
+        "Nombre": "David Gómez",
+        "Edad": "40",
+        "Departamento": "Recursos Humanos",
+        "Salario": "47000"
+    },
+    {
+        "ID": "5",
+        "Nombre": "María Fernández",
+        "Edad": "25",
+        "Departamento": "Soporte Técnico",
+        "Salario": "30000"
+    }
+]
