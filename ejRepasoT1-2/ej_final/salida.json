@@ -1,0 +1,23 @@
+[
+    {
+        "ID": 4,
+        "Nombre": "David G\u00f3mez",
+        "Edad": 40,
+        "Salario": 47000.0,
+        "DepartamentoID": 3
+    },
+    {
+        "ID": 7,
+        "Nombre": "Sara L\u00f3pez",
+        "Edad": 29,
+        "Salario": 37000.0,
+        "DepartamentoID": 3
+    },
+    {
+        "ID": 8,
+        "Nombre": "Pablo D\u00edaz",
+        "Edad": 33,
+        "Salario": 52000.0,
+        "DepartamentoID": 3
+    }
+]

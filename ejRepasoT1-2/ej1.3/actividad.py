@@ -6,7 +6,7 @@ class Convertidor():
         try:
             with open(file_csv, encoding='utf-8',mode='r') as f:
                 reader=csv.DictReader(f,fieldnames,delimiter=':')
-                rows=list(reader)
+                rows=list(reader)# convierte cada fila del csv en elemento de lista para el json
         #ahora lo escribimos en el json
             with open(file_json,encoding='utf-8' ,mode='w') as f:
                 json.dump(rows, f, ensure_ascii=False, indent=4)        
