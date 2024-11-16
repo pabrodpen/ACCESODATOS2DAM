@@ -36,7 +36,7 @@ if planta:
     # Modificar el atributo 'tamaño'
     planta.tamaño = "Pequeño"
     transaction.commit()  # Confirmar los cambios en la base de datos
-    print("Después de la modificación:")
+    print("Después de la modificación del tamaño:")
     print(
         f"ID: {planta.id}, Nombre: {planta.nombre}, Familia: {planta.familia}, Tamaño: {planta.tamaño},Clima: {planta.clima}, Tipo de suelo: {planta.tipo_suelo}"
     )

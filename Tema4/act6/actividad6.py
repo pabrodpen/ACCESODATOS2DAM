@@ -1,5 +1,6 @@
 import ZODB, ZODB.FileStorage, transaction
 from persistent import Persistent
+import copy
 
 # Clase Planta
 class Planta(Persistent):
@@ -10,7 +11,7 @@ class Planta(Persistent):
         self.tamaño = tamaño
         self.clima = clima
         self.tipo_suelo = tipo_suelo
-        self.nombre_detalles = nombre_detalles 
+        self.nombre_detalles = nombre_detalles  # Referencia a un objeto de DetallesPlanta
 
 # Clase DetallesPlanta
 class DetallesPlanta(Persistent):
@@ -56,19 +57,22 @@ try:
     transaction.commit()
     print("Transacción completada: Plantas y detalles añadidos correctamente.")
 
-    #Plantas que tengan los detalles 2
-    # Mostrar plantas asociadas con "Detalles1"
+    # Plantas que tengan los detalles 'Detalles2'
     print("Plantas con detalles Detalles1:")
     for nombre, planta in root["plantas"].items():
-        if planta.nombre_detalles == "Detalles1":
-            print(f"ID: {planta.id}, Nombre: {planta.nombre}, Familia: {planta.familia}, "
-              f"Tamaño: {planta.tamaño}, Clima: {planta.clima}, Tipo de suelo: {planta.tipo_suelo}")
-
+        # Crear una copia independiente de la planta usando deepcopy
+        planta_copia = copy.deepcopy(planta)
+        
+        if planta_copia.nombre_detalles == "Detalles1":
+            print(f"ID: {planta_copia.id}, Nombre: {planta_copia.nombre}, Familia: {planta_copia.familia}, "
+                  f"Tamaño: {planta_copia.tamaño}, Clima: {planta_copia.clima}, Tipo de suelo: {planta_copia.tipo_suelo}")
 
 except Exception as e:
+    # Si ocurre un error, revertimos la transacción
     transaction.abort()
     print(f"Error durante la transacción: {e}. Transacción revertida.")
 
 finally:
+    # Cerrar la conexión a la base de datos
     connection.close()
     db.close()

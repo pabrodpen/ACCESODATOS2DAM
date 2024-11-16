@@ -30,6 +30,7 @@ transaction.commit()
 
 # Filtrar plantas por clima
 tipo_deseado = "Templado"
+print("Plantas de clima Templado")
 for clave, planta in root.items():
     if hasattr(planta, "clima") and planta.clima == tipo_deseado:
         print(
