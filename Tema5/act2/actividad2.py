@@ -14,34 +14,34 @@ try:
     coleccion_plantas = db["Plantas"]
 
 
-    # 1. Consultar plantas cuyo clima sea "Templado"
+    # 1. Consplantas cuyo clima sea "Templado"
     print("Plantas con clima 'Templado':")
     consulta = {"clima": "Templado"}
     plantas = coleccion_plantas.find(consulta)
     for planta in plantas:
         print(planta)
 
-    # 2. Proyección de campos específicos
+    #campos específicos
     print("\nMostrar solo 'nombre' y 'clima':")
     proyeccion = {"nombre": 1, "clima": 1, "_id": 0}
     plantas = coleccion_plantas.find(consulta, proyeccion)
     for planta in plantas:
         print(planta)
 
-    # 3. Limitar y ordenar resultados
+    #limitar y ordenar resultados
     print("\n2 plantas ordenadas alfabéticamente por 'nombre':")
     plantas = coleccion_plantas.find(consulta, proyeccion).sort("nombre", 1).limit(2)
     for planta in plantas:
         print(planta)
 
-    # 4. Consultas con expresiones regulares
+    #consultas con expresiones regulares
     print("\n4. Plantas cuyos nombres comienzan con la letra 'P':")
     consulta = {"nombre": {"$regex": "^P"}}
     plantas = coleccion_plantas.find(consulta)
     for planta in plantas:
         print(planta)
 
-    # 5. Contar documentos con una condición
+    #contar documentos con una condición
     print("\nContar plantas con clima 'Templado':")
     total = coleccion_plantas.count_documents({"clima": "Templado"})
     print(f"Total de plantas con clima templado: {total}")

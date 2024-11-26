@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient,errors
 
 # Datos de conexión
 usuario = "usuario"
@@ -16,6 +16,7 @@ try:
     # Seleccionar la base de datos y la colección "Plantas"
     db = client[base_datos]
     coleccion_plantas = db["Plantas"]
+
 
     # 1. Añadir tres documentos a la colección "Plantas"
     documentos = [
@@ -54,7 +55,7 @@ try:
     # Actualizamos el tamaño de la planta "Cactus"
     resultado_actualizacion = coleccion_plantas.update_one(
         {"nombre": "Cactus"},  # Filtro para encontrar el documento
-        {"$set": {"tamaño": "Mediano"}},  # Campos que deseas modificar
+        {"$set": {"tamaño": "Mediano"}}, 
     )
     if resultado_actualizacion.modified_count > 0:
         print("\nDocumento actualizado con éxito.")
@@ -76,8 +77,17 @@ try:
     for planta in coleccion_plantas.find():
         print(planta)
 
-except Exception as e:
-    print(f"Error al conectar con la base de datos MongoDB: {e}")
+except errors.ServerSelectionTimeoutError as err:
+    # Este error ocurre si el servidor no está disponible o no se puede conectar
+    print(f"No se pudo conectar a MongoDB: {err}")
+except errors.OperationFailure as err:
+    # Este error ocurre si las credenciales son incorrectas o no se tienen los permisos necesarios
+    print(f"Fallo en la autenticación o permisos insuficientes: {err}")
+except Exception as err:
+    # Manejar cualquier otro error inesperado
+    print(f"Ocurrió un error inesperado: {err}")
 finally:
-    # Cerrar la conexión
-    client.close()
+    # Cerrar la conexión si se estableció correctamente
+    if 'client' in locals():
+        client.close()
+        print("Conexión cerrada.")
