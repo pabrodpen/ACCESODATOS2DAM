@@ -1,0 +1,12 @@
+2024-12-05 11:00:56,985 - INFO - Archivo JSON guardado. Versión actual: 1
+2024-12-05 11:00:56,985 - INFO - Transacción iniciada.
+2024-12-05 11:00:56,985 - INFO - Dato agregado: {'nombre': 'Rosa', 'familia': 'Rosaceae', 'clima': 'Templado', 'tipo_suelo': 'Arcilloso'}
+2024-12-05 11:00:56,985 - INFO - Dato agregado: {'nombre': 'Cactus', 'familia': 'Cactaceae', 'clima': 'Árido', 'tipo_suelo': 'Arenoso'}
+2024-12-05 11:00:56,986 - INFO - Archivo JSON guardado. Versión actual: 2
+2024-12-05 11:00:56,986 - INFO - Transacción confirmada y cambios guardados.
+2024-12-05 11:00:56,986 - INFO - Archivo CSV guardado. Versión actual: 1
+2024-12-05 11:00:56,986 - INFO - Transacción iniciada.
+2024-12-05 11:00:56,986 - INFO - Dato agregado: {'nombre': 'Rosa', 'familia': 'Rosaceae', 'clima': 'Templado', 'tipo_suelo': 'Arcilloso'}
+2024-12-05 11:00:56,986 - INFO - Dato agregado: {'nombre': 'Cactus', 'familia': 'Cactaceae', 'clima': 'Árido', 'tipo_suelo': 'Arenoso'}
+2024-12-05 11:00:56,986 - INFO - Archivo CSV guardado. Versión actual: 2
+2024-12-05 11:00:56,986 - INFO - Transacción confirmada y cambios guardados.

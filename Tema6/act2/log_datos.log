@@ -1,0 +1,13 @@
+2024-12-05 11:07:59,951 - INFO - Archivo JSON guardado. Versión actual: 1
+2024-12-05 11:07:59,952 - INFO - Transacción iniciada.
+2024-12-05 11:07:59,952 - INFO - Dato agregado: {'nombre': 'Rosa', 'familia': 'Rosaceae', 'clima': 'Templado', 'tipo_suelo': 'Arcilloso'}
+2024-12-05 11:07:59,952 - INFO - Dato agregado: {'nombre': 'Cactus', 'familia': 'Cactaceae', 'clima': 'Árido', 'tipo_suelo': 'Arenoso'}
+2024-12-05 11:07:59,952 - INFO - Archivo JSON guardado. Versión actual: 2
+2024-12-05 11:07:59,953 - INFO - Transacción confirmada y cambios guardados.
+2024-12-05 11:07:59,953 - INFO - Transacción iniciada.
+2024-12-05 11:07:59,965 - INFO - Archivo JSON guardado. Versión actual: 3
+2024-12-05 11:07:59,966 - INFO - Transacción confirmada y cambios guardados.
+2024-12-05 11:07:59,966 - INFO - Transacción iniciada.
+2024-12-05 11:07:59,966 - INFO - Datos con nombre=Cactus eliminados.
+2024-12-05 11:07:59,966 - INFO - Archivo JSON guardado. Versión actual: 4
+2024-12-05 11:07:59,966 - INFO - Transacción confirmada y cambios guardados.

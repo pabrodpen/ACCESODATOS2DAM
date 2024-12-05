@@ -1,0 +1,14 @@
+[
+    {
+        "nombre": "Rosa",
+        "familia": "Rosaceae",
+        "clima": "Templado",
+        "tipo_suelo": "Arcilloso"
+    },
+    {
+        "nombre": "Cactus",
+        "familia": "Cactaceae",
+        "clima": "\u00c1rido",
+        "tipo_suelo": "Arenoso"
+    }
+]
