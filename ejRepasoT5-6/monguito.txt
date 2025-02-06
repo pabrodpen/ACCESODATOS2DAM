@@ -1,0 +1,132 @@
+🚀 1. Iniciar MongoDB en Linux
+
+# Iniciar MongoDB
+sudo systemctl start mongod
+
+# Verificar el estado del servicio
+sudo systemctl status mongod
+
+# Detener MongoDB
+sudo systemctl stop mongod
+
+# Iniciar manualmente (modo background)
+mongod --dbpath /ruta/a/tu/carpeta_de_datos &
+
+
+💻 2. Acceder a la Consola de MongoDB
+
+# Acceder a MongoDB
+mongo
+
+# Conexión remota
+mongo --host <IP_o_Hostname> --port <Puerto> -u <Usuario> -p <Contraseña>
+
+
+🗄️ 3. Trabajar con Bases de Datos
+
+# Seleccionar la base de datos "1dam"
+use 1dam
+
+# Ver la base de datos actual
+db
+
+# Listar todas las bases de datos
+show dbs
+
+# Cambiar o crear una base de datos
+use 1dam
+
+
+📋 4. Trabajar con Colecciones
+
+# Listar colecciones
+show collections
+
+# Crear una colección
+ db.createCollection("alumnos")
+
+# Eliminar una colección
+ db.alumnos.drop()
+
+
+🔍 5. Insertar, Consultar y Modificar Documentos
+
+# Insertar documentos
+db.alumnos.insertOne({ nombre: "Juan", edad: 20, curso: "1DAM" })
+db.alumnos.insertMany([
+  { nombre: "Ana", edad: 21, curso: "1DAM" },
+  { nombre: "Carlos", edad: 19, curso: "1DAM" }
+])
+
+# Ver todos los documentos
+db.alumnos.find().pretty()
+
+# Buscar documentos específicos
+db.alumnos.find({ nombre: "Juan" })
+db.alumnos.find({ edad: { $gt: 20 } })
+db.alumnos.find({ curso: "1DAM" }).limit(5)
+
+# Actualizar documentos
+db.alumnos.updateOne(
+  { nombre: "Juan" },
+  { $set: { edad: 22 } }
+)
+
+db.alumnos.updateMany(
+  { curso: "1DAM" },
+  { $set: { activo: true } }
+)
+
+# Eliminar documentos
+db.alumnos.deleteOne({ nombre: "Carlos" })
+db.alumnos.deleteMany({ curso: "1DAM" })
+
+
+⚡ 6. Comandos Avanzados
+
+# Contar documentos
+db.alumnos.countDocuments()
+db.alumnos.countDocuments({ curso: "1DAM" })
+
+# Ordenar resultados
+db.alumnos.find().sort({ edad: 1 })
+db.alumnos.find().sort({ edad: -1 })
+
+# Proyección de campos
+db.alumnos.find({}, { nombre: 1, edad: 1, _id: 0 })
+
+# Operadores lógicos
+db.alumnos.find({ $or: [ { edad: { $lt: 20 } }, { curso: "1DAM" } ] })
+db.alumnos.find({ $and: [ { edad: { $gt: 18 } }, { curso: "1DAM" } ] })
+
+
+🗑️ 7. Eliminar Base de Datos
+
+# Eliminar la base de datos actual
+use 1dam
+db.dropDatabase()
+
+
+📂 8. Exportar e Importar Datos
+
+# Exportar una colección
+desde MongoDB a JSON o CSV
+mongoexport --db 1dam --collection alumnos --out alumnos.json
+mongoexport --db 1dam --collection alumnos --type=csv --fields nombre,edad,curso --out alumnos.csv
+
+# Importar datos a MongoDB
+desde un archivo JSON
+mongoimport --db 1dam --collection alumnos --file alumnos.json
+
+
+🤔 Ayuda Rápida
+
+# Ayuda general en la consola
+help()
+
+# Ayuda sobre la base de datos actual
+db.help()
+
+# Ayuda sobre colecciones específicas
+db.alumnos.help()
+

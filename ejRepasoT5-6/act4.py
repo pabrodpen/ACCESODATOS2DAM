@@ -48,6 +48,8 @@ import logging
 import os
 from copy import Error, deepcopy
 import mysql.connector
+from pymongo import MongoClient,PyMongoError
+import transaction
 
 logging.basicConfig(
     level=logging.INFO,
@@ -55,6 +57,7 @@ logging.basicConfig(
     handlers=[logging.FileHandler("log_datos.log"), logging.StreamHandler()],
 )
 class DataManager:
+    #ESCRIBIR DATO
     def __init__(self, ruta_archivo):
         self.ruta_archivo = ruta_archivo
         self.transaccion_activa = False
@@ -136,6 +139,24 @@ class DataBaseManager:#controlar bd mysql
         self.connection = mysql.connector.connect(host=host, user=user, password=password, database=database)
         self.cursor = self.connection.cursor()
 
+    def conectar(self):
+        """Conectar a la base de datos MongoDB"""
+        try:
+            self.client = MongoClient(self.uri)
+            self.db = self.client[self.database_name]
+            self.collection = self.db[self.collection_name]
+            logging.info(
+                f"Conectado a MongoDB: {self.database_name}.{self.collection_name}"
+            )
+        except PyMongoError as e:
+            logging.error(f"Error al conectar a MongoDB: {e}")
+
+    def desconectar(self):
+        """Cerrar la conexión a MongoDB"""
+        if self.client:
+            self.client.close()
+            logging.info("Conexión a MongoDB cerrada.")
+
     def crear_tabla(self):
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS Plantas (
@@ -177,7 +198,125 @@ class DataBaseManager:#controlar bd mysql
         self.cursor.execute("UPDATE Plantas SET familia = %s, clima = %s WHERE nombre = %s", (familia, clima, nombre))
         self.connection.commit()
 
-class DataBaseManagerORM:#DatabaseManagerORM → Uso de Peewee ORM para bases de datos relacionales.
+    def ejecutar_query(self, query, params=None):
+        """Ejecuta una consulta SQL."""
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query, params)
+            self.connection.commit()
+            return cursor
+        except mysql.connector.Error as e:
+            logging.error(f"Error al ejecutar la consulta: {e}")
+            self.connection.rollback()
+
+class DatabaseManagerObject:
+    """Componente para gestionar bases de datos orientadas a objetos con ZODB."""
+
+    def __init__(self, filepath="1dam.fs"):
+        self.filepath = filepath
+        self.db = None
+        self.connection = None
+        self.root = None
+        self.transaccion_iniciada = False
+
+    def conectar(self):
+        """Conecta a la base de datos ZODB."""
+        try:
+            storage = FileStorage.FileStorage(self.filepath)
+            self.db = DB(storage)
+            self.connection = self.db.open()
+            self.root = self.connection.root()
+            if "motocicletas" not in self.root:
+                self.root["motocicletas"] = {}
+                transaction.commit()
+            logging.info("Conexión establecida con ZODB.")
+        except Exception as e:
+            logging.error(f"Error al conectar a ZODB: {e}")
+
+    def desconectar(self):
+        """Cierra la conexión a la base de datos."""
+        try:
+            if self.connection:
+                self.connection.close()
+            if self.db:
+                self.db.close()
+            logging.info("Conexión a ZODB cerrada.")
+        except Exception as e:
+            logging.error(f"Error al cerrar la conexión a ZODB: {e}")
+
+    def iniciar_transaccion(self):
+        """Inicia una transacción."""
+        try:
+            transaction.begin()
+            self.transaccion_iniciada = True
+            logging.info("Transacción iniciada.")
+        except Exception as e:
+            logging.error(f"Error al iniciar la transacción: {e}")
+
+    def confirmar_transaccion(self):
+        """Confirma la transacción."""
+        if self.transaccion_iniciada:
+            try:
+                transaction.commit()
+                self.transaccion_iniciada = False
+                logging.info("Transacción confirmada.")
+            except Exception as e:
+                logging.error(f"Error al confirmar la transacción: {e}")
+
+    def revertir_transaccion(self):
+        """Revierte la transacción."""
+        if self.transaccion_iniciada:
+            try:
+                transaction.abort()
+                self.transaccion_iniciada = False
+                logging.info("Transacción revertida.")
+            except Exception as e:
+                logging.error(f"Error al revertir la transacción: {e}")
+
+    def crear_motocicleta(self, id, marca, cilindrada, precio):
+        """Crea y almacena una nueva motocicleta."""
+        try:
+            if id in self.root["motocicletas"]:
+                raise ValueError(f"Ya existe una motocicleta con ID {id}.")
+            self.root["motocicletas"][id] = Motocicleta(marca, cilindrada, precio)
+            logging.info(f"Motocicleta con ID {id} creada exitosamente.")
+        except Exception as e:
+            logging.error(f"Error al crear la motocicleta con ID {id}: {e}")
+
+    def leer_motocicletas(self):
+        """Lee y muestra todas las motocicletas almacenadas."""
+        try:
+            motocicletas = self.root["motocicletas"]
+            for id, motocicleta in motocicletas.items():
+                logging.info(
+                    f"ID: {id}, Marca: {motocicleta.marca}, Cilindrada: {motocicleta.cilindrada}, Precio: {motocicleta.precio}"
+                )
+            return motocicletas
+        except Exception as e:
+            logging.error(f"Error al leer las motocicletas: {e}")
+
+    def actualizar_motocicleta(self, id, marca, cilindrada, precio):
+        """Actualiza los atributos de una motocicleta."""
+        try:
+            motocicleta = self.root["motocicletas"].get(id)
+            if not motocicleta:
+                raise ValueError(f"No existe una motocicleta con ID {id}.")
+            motocicleta.marca = marca
+            motocicleta.cilindrada = cilindrada
+            motocicleta.precio = precio
+            logging.info(f"Motocicleta con ID {id} actualizada exitosamente.")
+        except Exception as e:
+            logging.error(f"Error al actualizar la motocicleta con ID {id}: {e}")
+
+    def eliminar_motocicleta(self, id):
+        """Elimina una motocicleta por su ID."""
+        try:
+            if id not in self.root["motocicletas"]:
+                raise ValueError(f"No existe una motocicleta con ID {id}.")
+            del self.root["motocicletas"][id]
+            logging.info(f"Motocicleta con ID {id} eliminada exitosamente.")
+        except Exception as e:
+            logging.error(f"Error al eliminar la motocicleta con ID {id}: {e}")
 
 
 #--------------------------USO DE DATA MANAGER--------------------------
@@ -231,5 +370,113 @@ if __name__ == "__main__":
     print("Plantas en MySQL:", db_manager.consultar_plantas())
     
 
-#--------------------------USO DE DATABASEMANAGERORM--------------------------
+#--------------------------USO DE DATABASEMANAGEROBJECT--------------------------
 
+class DatabaseManagerObject:
+    """Componente para gestionar bases de datos orientadas a objetos con ZODB."""
+
+    def __init__(self, filepath="1dam.fs"):
+        self.filepath = filepath
+        self.db = None
+        self.connection = None
+        self.root = None
+        self.transaccion_iniciada = False
+
+    def conectar(self):
+        """Conecta a la base de datos ZODB."""
+        try:
+            storage = FileStorage.FileStorage(self.filepath)
+            self.db = DB(storage)
+            self.connection = self.db.open()
+            self.root = self.connection.root()
+            if "motocicletas" not in self.root:
+                self.root["motocicletas"] = {}
+                transaction.commit()
+            logging.info("Conexión establecida con ZODB.")
+        except Exception as e:
+            logging.error(f"Error al conectar a ZODB: {e}")
+
+    def desconectar(self):
+        """Cierra la conexión a la base de datos."""
+        try:
+            if self.connection:
+                self.connection.close()
+            if self.db:
+                self.db.close()
+            logging.info("Conexión a ZODB cerrada.")
+        except Exception as e:
+            logging.error(f"Error al cerrar la conexión a ZODB: {e}")
+
+    def iniciar_transaccion(self):
+        """Inicia una transacción."""
+        try:
+            transaction.begin()
+            self.transaccion_iniciada = True
+            logging.info("Transacción iniciada.")
+        except Exception as e:
+            logging.error(f"Error al iniciar la transacción: {e}")
+
+    def confirmar_transaccion(self):
+        """Confirma la transacción."""
+        if self.transaccion_iniciada:
+            try:
+                transaction.commit()
+                self.transaccion_iniciada = False
+                logging.info("Transacción confirmada.")
+            except Exception as e:
+                logging.error(f"Error al confirmar la transacción: {e}")
+
+    def revertir_transaccion(self):
+        """Revierte la transacción."""
+        if self.transaccion_iniciada:
+            try:
+                transaction.abort()
+                self.transaccion_iniciada = False
+                logging.info("Transacción revertida.")
+            except Exception as e:
+                logging.error(f"Error al revertir la transacción: {e}")
+
+    def crear_motocicleta(self, id, marca, cilindrada, precio):
+        """Crea y almacena una nueva motocicleta."""
+        try:
+            if id in self.root["motocicletas"]:
+                raise ValueError(f"Ya existe una motocicleta con ID {id}.")
+            self.root["motocicletas"][id] = Motocicleta(marca, cilindrada, precio)
+            logging.info(f"Motocicleta con ID {id} creada exitosamente.")
+        except Exception as e:
+            logging.error(f"Error al crear la motocicleta con ID {id}: {e}")
+
+    def leer_motocicletas(self):
+        """Lee y muestra todas las motocicletas almacenadas."""
+        try:
+            motocicletas = self.root["motocicletas"]
+            for id, motocicleta in motocicletas.items():
+                logging.info(
+                    f"ID: {id}, Marca: {motocicleta.marca}, Cilindrada: {motocicleta.cilindrada}, Precio: {motocicleta.precio}"
+                )
+            return motocicletas
+        except Exception as e:
+            logging.error(f"Error al leer las motocicletas: {e}")
+
+    def actualizar_motocicleta(self, id, marca, cilindrada, precio):
+        """Actualiza los atributos de una motocicleta."""
+        try:
+            motocicleta = self.root["motocicletas"].get(id)
+            if not motocicleta:
+                raise ValueError(f"No existe una motocicleta con ID {id}.")
+            motocicleta.marca = marca
+            motocicleta.cilindrada = cilindrada
+            motocicleta.precio = precio
+            logging.info(f"Motocicleta con ID {id} actualizada exitosamente.")
+        except Exception as e:
+            logging.error(f"Error al actualizar la motocicleta con ID {id}: {e}")
+
+    def eliminar_motocicleta(self, id):
+        """Elimina una motocicleta por su ID."""
+        try:
+            if id not in self.root["motocicletas"]:
+                raise ValueError(f"No existe una motocicleta con ID {id}.")
+            del self.root["motocicletas"][id]
+            logging.info(f"Motocicleta con ID {id} eliminada exitosamente.")
+        except Exception as e:
+            logging.error(f"Error al eliminar la motocicleta con ID {id}: {e}")
